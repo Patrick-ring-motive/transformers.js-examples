@@ -17,9 +17,7 @@ class TextGenerationPipeline {
     });
 
     this.model ??= AutoModelForCausalLM.from_pretrained(this.model_id, {
-      // dtype: "q4",
-      dtype: "q4f16",
-      device: "webgpu",
+      dtype: "q4",
       use_external_data_format: true,
       progress_callback,
     });
@@ -124,25 +122,20 @@ async function load() {
 // Listen for messages from the main thread
 self.addEventListener("message", async (e) => {
   const { type, data } = e.data;
-
   switch (type) {
     case "check":
       check();
       break;
-
     case "load":
       load();
       break;
-
     case "generate":
       stopping_criteria.reset();
       generate(data);
       break;
-
     case "interrupt":
       stopping_criteria.interrupt();
       break;
-
     case "reset":
       past_key_values_cache = null;
       stopping_criteria.reset();
