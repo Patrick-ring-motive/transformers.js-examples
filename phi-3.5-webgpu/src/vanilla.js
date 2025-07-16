@@ -51,7 +51,7 @@ async function generate(messages) {
     }
   };
   const callback_function = (output) => {
-    self.postMessage({
+    console.log({
       status: "update",
       output,
       tps,
@@ -91,7 +91,7 @@ async function generate(messages) {
   });
 
   // Send the output back to the main thread
-  self.postMessage({
+  console.log({
     status: "complete",
     output: decoded,
   });
@@ -100,32 +100,26 @@ async function generate(messages) {
 async function check() {
   const adapter = await navigator.gpu.requestAdapter();
   if (!adapter) {
-    throw new Error("WebGPU is not supported (no adapter found)");
+    console.log("WebGPU is not supported (no adapter found)");
   }
 }
 
 async function load() {
-  self.postMessage({
+  console.log({
     status: "loading",
     data: "Loading model...",
   });
 
   // Load the pipeline and save it for future use.
   const [tokenizer, model] = await TextGenerationPipeline.getInstance((x) => {
-    // We also add a progress callback to the pipeline so that we can
-    // track model loading.
-    self.postMessage(x);
+    console.log(x);
   });
 
-  self.postMessage({
-    status: "loading",
-    data: "Compiling shaders and warming up model...",
-  });
 
   // Run model with dummy input to compile shaders
   const inputs = tokenizer("a");
   await model.generate({ ...inputs, max_new_tokens: 1 });
-  self.postMessage({ status: "ready" });
+  console.log({ status: "ready" });
 }
 // Listen for messages from the main thread
 self.addEventListener("message", async (e) => {
