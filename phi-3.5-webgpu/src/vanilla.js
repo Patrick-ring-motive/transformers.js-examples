@@ -5,11 +5,15 @@ import {
   InterruptableStoppingCriteria,
 } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.2.1";
 
+globalThis.AutoTokenizer = AutoTokenizer;
+globalThis.AutoModelForCausalLM = AutoModelForCausalLM;
+globalThis.TextStreamer = TextStreamer;
+globalThis.InterruptableStoppingCriteria = InterruptableStoppingCriteria;
 /**
  * This class uses the Singleton pattern to enable lazy-loading of the pipeline
  */
 class TextGenerationPipeline {
-  static model_id = "onnx-community/Phi-3.5-mini-instruct-onnx-web";
+  static model_id = 'Xenova/distilbert-base-uncased-finetuned-sst-2-english';
 
   static async getInstance(progress_callback = null) {
     this.tokenizer ??= AutoTokenizer.from_pretrained(this.model_id, {
@@ -17,9 +21,9 @@ class TextGenerationPipeline {
     });
 
     this.model ??= AutoModelForCausalLM.from_pretrained(this.model_id, {
-      //      dtype: "q4",
-      use_external_data_format: true,
-      progress_callback,
+            dtype: "q4",
+    //  use_external_data_format: true,
+   //   progress_callback,
     });
 
     return Promise.all([this.tokenizer, this.model]);
