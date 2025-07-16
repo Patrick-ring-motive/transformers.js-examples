@@ -98,16 +98,9 @@ async function generate(messages) {
 }
 
 async function check() {
-  try {
-    const adapter = await navigator.gpu.requestAdapter();
-    if (!adapter) {
-      throw new Error("WebGPU is not supported (no adapter found)");
-    }
-  } catch (e) {
-    self.postMessage({
-      status: "error",
-      data: e.toString(),
-    });
+  const adapter = await navigator.gpu.requestAdapter();
+  if (!adapter) {
+    throw new Error("WebGPU is not supported (no adapter found)");
   }
 }
 
@@ -162,3 +155,8 @@ self.addEventListener("message", async (e) => {
       break;
   }
 });
+
+
+await check();
+await load();
+console.log(generate([{ role: "user", content: "Hello!" }]));
