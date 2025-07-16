@@ -17,7 +17,7 @@ class TextGenerationPipeline {
     });
 
     this.model ??= AutoModelForCausalLM.from_pretrained(this.model_id, {
-      dtype: "q4",
+      //      dtype: "q4",
       use_external_data_format: true,
       progress_callback,
     });
