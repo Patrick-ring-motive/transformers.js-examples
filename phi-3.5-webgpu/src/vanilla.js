@@ -3,7 +3,7 @@ import {
   AutoModelForCausalLM,
   TextStreamer,
   InterruptableStoppingCriteria,
-} from "@huggingface/transformers";
+} from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.2.1";
 
 /**
  * This class uses the Singleton pattern to enable lazy-loading of the pipeline
