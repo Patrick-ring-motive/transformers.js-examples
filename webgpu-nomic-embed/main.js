@@ -54,7 +54,9 @@ const exp_logit_scale = Math.exp(4.6052);
 const IMAGE_SIZE = 224;
 const canvas = document.createElement("canvas");
 canvas.width = canvas.height = IMAGE_SIZE;
-const context = canvas.getContext("2d", { willReadFrequently: true });
+const context = canvas.getContext("2d", {
+  willReadFrequently: true
+});
 
 let isProcessing = false;
 let previousTime;
@@ -66,7 +68,7 @@ let labels;
 function onFrameUpdate() {
   if (!isProcessing) {
     isProcessing = true;
-    (async function () {
+    (async function() {
       // If text inputs have changed, update the embeddings
       if (
         prevTextInputs !== labelsInput.value ||
@@ -88,7 +90,9 @@ function onFrameUpdate() {
           });
 
           // Compute embeddings
-          const { last_hidden_state } = await text_model(text_inputs);
+          const {
+            last_hidden_state
+          } = await text_model(text_inputs);
           textEmbeddings = mean_pooling(
             last_hidden_state,
             text_inputs.attention_mask,
@@ -114,7 +118,9 @@ function onFrameUpdate() {
         const image_inputs = await processor(image);
 
         // Compute embeddings
-        const { last_hidden_state } = await vision_model(image_inputs);
+        const {
+          last_hidden_state
+        } = await vision_model(image_inputs);
         const imageEmbedding = last_hidden_state
           .mean(1)
           .normalize(2, -1)
@@ -153,8 +159,9 @@ function onFrameUpdate() {
 
 // Start the video stream
 navigator.mediaDevices
-  .getUserMedia(
-    { video: true }, // Ask for video
+  .getUserMedia({
+      video: true
+    }, // Ask for video
   )
   .then((stream) => {
     // Set up the video and canvas elements.
@@ -162,7 +169,10 @@ navigator.mediaDevices
     video.play();
 
     const videoTrack = stream.getVideoTracks()[0];
-    const { width, height } = videoTrack.getSettings();
+    const {
+      width,
+      height
+    } = videoTrack.getSettings();
 
     video.width = width;
     video.height = height;

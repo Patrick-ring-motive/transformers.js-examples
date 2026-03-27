@@ -1,4 +1,6 @@
-import { pipeline } from "@huggingface/transformers";
+import {
+  pipeline
+} from "@huggingface/transformers";
 
 // Use the Singleton pattern to enable lazy construction of the pipeline.
 class PipelineSingleton {

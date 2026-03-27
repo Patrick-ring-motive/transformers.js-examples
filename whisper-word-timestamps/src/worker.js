@@ -1,4 +1,6 @@
-import { pipeline } from "@huggingface/transformers";
+import {
+  pipeline
+} from "@huggingface/transformers";
 
 const PER_DEVICE_CONFIG = {
   webgpu: {
@@ -32,7 +34,9 @@ class PipelineSingeton {
   }
 }
 
-async function load({ device }) {
+async function load({
+  device
+}) {
   self.postMessage({
     status: "loading",
     data: `Loading model (${device})...`,
@@ -56,10 +60,15 @@ async function load({ device }) {
     });
   }
 
-  self.postMessage({ status: "ready" });
+  self.postMessage({
+    status: "ready"
+  });
 }
 
-async function run({ audio, language }) {
+async function run({
+  audio,
+  language
+}) {
   const transcriber = await PipelineSingeton.getInstance();
 
   // Read and preprocess image
@@ -73,12 +82,19 @@ async function run({ audio, language }) {
 
   const end = performance.now();
 
-  self.postMessage({ status: "complete", result, time: end - start });
+  self.postMessage({
+    status: "complete",
+    result,
+    time: end - start
+  });
 }
 
 // Listen for messages from the main thread
 self.addEventListener("message", async (e) => {
-  const { type, data } = e.data;
+  const {
+    type,
+    data
+  } = e.data;
 
   switch (type) {
     case "load":

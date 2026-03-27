@@ -1,4 +1,8 @@
-import { AutoModel, AutoProcessor, RawImage } from "@huggingface/transformers";
+import {
+  AutoModel,
+  AutoProcessor,
+  RawImage
+} from "@huggingface/transformers";
 
 // Reference the elements that we will need
 const status = document.getElementById("status");
@@ -42,10 +46,14 @@ thresholdSlider.addEventListener("input", () => {
 thresholdSlider.disabled = false;
 
 let size = 128;
-processor.feature_extractor.size = { shortest_edge: size };
+processor.feature_extractor.size = {
+  shortest_edge: size
+};
 sizeSlider.addEventListener("input", () => {
   size = Number(sizeSlider.value);
-  processor.feature_extractor.size = { shortest_edge: size };
+  processor.feature_extractor.size = {
+    shortest_edge: size
+  };
   sizeLabel.textContent = size;
 });
 sizeSlider.disabled = false;
@@ -105,21 +113,29 @@ function renderBox([xmin, ymin, xmax, ymax, score, id], [w, h]) {
 
 let isProcessing = false;
 let previousTime;
-const context = canvas.getContext("2d", { willReadFrequently: true });
+const context = canvas.getContext("2d", {
+  willReadFrequently: true
+});
+
 function updateCanvas() {
-  const { width, height } = canvas;
+  const {
+    width,
+    height
+  } = canvas;
   context.drawImage(video, 0, 0, width, height);
 
   if (!isProcessing) {
     isProcessing = true;
-    (async function () {
+    (async function() {
       // Read the current frame from the video
       const pixelData = context.getImageData(0, 0, width, height).data;
       const image = new RawImage(pixelData, width, height, 4);
 
       // Process the image and run the model
       const inputs = await processor(image);
-      const { outputs } = await model(inputs);
+      const {
+        outputs
+      } = await model(inputs);
 
       // Update UI
       overlay.innerHTML = "";
@@ -141,8 +157,9 @@ function updateCanvas() {
 
 // Start the video stream
 navigator.mediaDevices
-  .getUserMedia(
-    { video: true }, // Ask for video
+  .getUserMedia({
+      video: true
+    }, // Ask for video
   )
   .then((stream) => {
     // Set up the video and canvas elements.
@@ -150,7 +167,10 @@ navigator.mediaDevices
     video.play();
 
     const videoTrack = stream.getVideoTracks()[0];
-    const { width, height } = videoTrack.getSettings();
+    const {
+      width,
+      height
+    } = videoTrack.getSettings();
 
     setStreamSize(width * scale, height * scale);
 

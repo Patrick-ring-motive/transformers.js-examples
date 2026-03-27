@@ -1,4 +1,8 @@
-import { AutoModel, AutoProcessor, RawImage } from "@huggingface/transformers";
+import {
+  AutoModel,
+  AutoProcessor,
+  RawImage
+} from "@huggingface/transformers";
 
 // Constants
 const EXAMPLE_URL =
@@ -15,7 +19,9 @@ status.textContent = "Loading model...";
 
 const model = await AutoModel.from_pretrained("briaai/RMBG-1.4", {
   // Do not require config.json to be present in the repository
-  config: { model_type: "custom" },
+  config: {
+    model_type: "custom"
+  },
 });
 
 const processor = await AutoProcessor.from_pretrained("briaai/RMBG-1.4", {
@@ -30,7 +36,10 @@ const processor = await AutoProcessor.from_pretrained("briaai/RMBG-1.4", {
     image_std: [1, 1, 1],
     resample: 2,
     rescale_factor: 0.00392156862745098,
-    size: { width: 1024, height: 1024 },
+    size: {
+      width: 1024,
+      height: 1024
+    },
   },
 });
 
@@ -41,7 +50,7 @@ example.addEventListener("click", (e) => {
   predict(EXAMPLE_URL);
 });
 
-fileUpload.addEventListener("change", function (e) {
+fileUpload.addEventListener("change", function(e) {
   const file = e.target.files[0];
   if (!file) {
     return;
@@ -73,10 +82,16 @@ async function predict(url) {
   status.textContent = "Analysing...";
 
   // Preprocess image
-  const { pixel_values } = await processor(image);
+  const {
+    pixel_values
+  } = await processor(image);
 
   // Predict alpha matte
-  const { output } = await model({ input: pixel_values });
+  const {
+    output
+  } = await model({
+    input: pixel_values
+  });
 
   // Resize mask back to original size
   const mask = await RawImage.fromTensor(output[0].mul(255).to("uint8")).resize(

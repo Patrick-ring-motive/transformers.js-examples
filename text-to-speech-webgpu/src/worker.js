@@ -1,4 +1,7 @@
-import { HFModelConfig_v1, InterfaceHF } from "outetts";
+import {
+  HFModelConfig_v1,
+  InterfaceHF
+} from "outetts";
 
 // Check if WebGPU is supported
 let fp16_supported = false;
@@ -8,7 +11,9 @@ try {
     throw new Error("WebGPU is not supported (no adapter found)");
   }
   fp16_supported = adapter.features.has("shader-f16");
-  self.postMessage({ status: "feature-success" });
+  self.postMessage({
+    status: "feature-success"
+  });
 } catch (e) {
   self.postMessage({
     status: "feature-error",
@@ -30,17 +35,22 @@ const tts_interface = await InterfaceHF({
   model_version: "0.2",
   cfg: model_config,
 });
-self.postMessage({ status: "ready" });
+self.postMessage({
+  status: "ready"
+});
 
 // Listen for messages from the main thread
 self.addEventListener("message", async (e) => {
-  const { text, speaker_id } = e.data;
+  const {
+    text,
+    speaker_id
+  } = e.data;
 
   // Load a default speaker
   const speaker =
-    speaker_id === "random"
-      ? null
-      : tts_interface.load_default_speaker(speaker_id);
+    speaker_id === "random" ?
+    null :
+    tts_interface.load_default_speaker(speaker_id);
 
   // Generate speech
   const output = await tts_interface.generate({
@@ -56,7 +66,9 @@ self.addEventListener("message", async (e) => {
 
   // Send the audio file back to the main thread
   const buffer = output.to_wav("output.wav");
-  const blob = new Blob([buffer], { type: "audio/wav" });
+  const blob = new Blob([buffer], {
+    type: "audio/wav"
+  });
   self.postMessage({
     status: "complete",
     audio: URL.createObjectURL(blob),

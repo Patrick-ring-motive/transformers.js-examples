@@ -23,23 +23,37 @@ const model = await AutoModelForImageClassification.from_pretrained(model_id, {
   dtype: webgpu ? "q4" : "q8",
 }).catch((error) => {
   console.error(error);
-  self.postMessage({ type: "error", error: error.toString() });
+  self.postMessage({
+    type: "error",
+    error: error.toString()
+  });
   throw error;
 });
 const processor = await AutoProcessor.from_pretrained(model_id).catch(
   (error) => {
     console.error(error);
-    self.postMessage({ type: "error", error: error.toString() });
+    self.postMessage({
+      type: "error",
+      error: error.toString()
+    });
     throw error;
   },
 );
 
-self.postMessage({ type: "status", status: "ready" });
+self.postMessage({
+  type: "status",
+  status: "ready"
+});
 
 const MAX_IMAGE_SIZE = 800;
 self.onmessage = async (event) => {
-  const { image } = event.data;
-  self.postMessage({ type: "status", status: "read_image" });
+  const {
+    image
+  } = event.data;
+  self.postMessage({
+    type: "status",
+    status: "read_image"
+  });
 
   let raw_image = await RawImage.read(image);
   if (raw_image.width > MAX_IMAGE_SIZE || raw_image.height > MAX_IMAGE_SIZE) {
@@ -58,12 +72,21 @@ self.onmessage = async (event) => {
   // Pre-process image
   const inputs = await processor(raw_image);
 
-  self.postMessage({ type: "status", status: "run_model" });
+  self.postMessage({
+    type: "status",
+    status: "run_model"
+  });
 
   // Perform inference
-  const { logits, attentions } = await model(inputs);
+  const {
+    logits,
+    attentions
+  } = await model(inputs);
 
-  self.postMessage({ type: "status", status: "postprocess" });
+  self.postMessage({
+    type: "status",
+    status: "postprocess"
+  });
 
   // Get the predicted class
   const scores = logits[0];
@@ -103,14 +126,13 @@ self.onmessage = async (event) => {
       const maxval = head_attentions.max().item();
       const map = RawImage.fromTensor(
         head_attentions
-          .sub_(minval)
-          .div_(maxval - minval)
-          .mul_(255)
-          .to("uint8"),
+        .sub_(minval)
+        .div_(maxval - minval)
+        .mul_(255)
+        .to("uint8"),
       ).rgba();
       const image = await createImageBitmap(
-        new ImageData(map.data, map.width, map.height),
-        {
+        new ImageData(map.data, map.width, map.height), {
           imageOrientation: "flipY",
         },
       );

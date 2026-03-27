@@ -1,4 +1,6 @@
-import { pipeline } from "@huggingface/transformers";
+import {
+  pipeline
+} from "@huggingface/transformers";
 import wavefile from "wavefile";
 
 // Load model

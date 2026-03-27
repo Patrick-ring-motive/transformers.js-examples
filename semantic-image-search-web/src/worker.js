@@ -3,7 +3,10 @@ import {
   CLIPTextModelWithProjection,
   cos_sim,
 } from "@huggingface/transformers";
-import { getCachedFile, getCachedJSON } from "./utils.js";
+import {
+  getCachedFile,
+  getCachedJSON
+} from "./utils.js";
 
 const EMBED_DIM = 512;
 
@@ -23,8 +26,9 @@ class ApplicationSingleton {
       progress_callback,
     });
     this.text_model ??= CLIPTextModelWithProjection.from_pretrained(
-      this.model_id,
-      { progress_callback },
+      this.model_id, {
+        progress_callback
+      },
     );
     this.metadata ??= getCachedJSON(this.BASE_URL + "image-embeddings.json");
     this.embeddings ??= new Promise((resolve, reject) => {
@@ -66,10 +70,12 @@ self.addEventListener("message", async (event) => {
   // Get the tokenizer, model, metadata, and embeddings. When called for the first time,
   // this will load the files and cache them for future use.
   const [tokenizer, text_model, metadata, embeddings] =
-    await ApplicationSingleton.getInstance(self.postMessage);
+  await ApplicationSingleton.getInstance(self.postMessage);
 
   // Send the output back to the main thread
-  self.postMessage({ status: "ready" });
+  self.postMessage({
+    status: "ready"
+  });
 
   // Run tokenization
   const text_inputs = tokenizer(event.data.text, {
@@ -78,7 +84,9 @@ self.addEventListener("message", async (event) => {
   });
 
   // Compute embeddings
-  const { text_embeds } = await text_model(text_inputs);
+  const {
+    text_embeds
+  } = await text_model(text_inputs);
 
   // Compute similarity scores
   const scores = cosineSimilarity(text_embeds.data, embeddings);

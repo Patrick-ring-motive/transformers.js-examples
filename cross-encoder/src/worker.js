@@ -12,8 +12,7 @@ class CrossEncoderSingleton {
     this.tokenizer ??= AutoTokenizer.from_pretrained(this.model_id);
 
     this.model ??= AutoModelForSequenceClassification.from_pretrained(
-      this.model_id,
-      {
+      this.model_id, {
         progress_callback,
       },
     );
@@ -32,7 +31,10 @@ self.addEventListener("message", async (event) => {
     self.postMessage(x);
   });
 
-  const { query, documents } = event.data;
+  const {
+    query,
+    documents
+  } = event.data;
 
   const docs = documents.trim().split("\n");
 
@@ -41,7 +43,9 @@ self.addEventListener("message", async (event) => {
     padding: true,
     truncation: true,
   });
-  const { logits } = await model(inputs);
+  const {
+    logits
+  } = await model(inputs);
   const output = logits
     .sigmoid()
     .tolist()
@@ -53,5 +57,8 @@ self.addEventListener("message", async (event) => {
     .sort((a, b) => b.score - a.score);
 
   // Send the output back to the main thread
-  self.postMessage({ status: "complete", output });
+  self.postMessage({
+    status: "complete",
+    output
+  });
 });

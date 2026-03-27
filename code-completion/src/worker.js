@@ -1,4 +1,7 @@
-import { pipeline, TextStreamer } from "@huggingface/transformers";
+import {
+  pipeline,
+  TextStreamer
+} from "@huggingface/transformers";
 
 /**
  * This class uses the Singleton pattern to ensure that only one instance of the pipeline is loaded.
@@ -9,7 +12,9 @@ class CodeCompletionPipeline {
   static instance = null;
 
   static async getInstance(progress_callback = null) {
-    this.instance ??= pipeline(this.task, this.model, { progress_callback });
+    this.instance ??= pipeline(this.task, this.model, {
+      progress_callback
+    });
 
     return this.instance;
   }

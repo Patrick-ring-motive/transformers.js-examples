@@ -61,10 +61,10 @@ async function generate(messages) {
   // Load all images
   const images = await Promise.all(
     messages
-      .map((x) => x.content)
-      .flat(Infinity)
-      .filter((msg) => msg.image !== undefined)
-      .map((msg) => load_image(msg.image)),
+    .map((x) => x.content)
+    .flat(Infinity)
+    .filter((msg) => msg.image !== undefined)
+    .map((msg) => load_image(msg.image)),
   );
 
   // Prepare inputs
@@ -104,9 +104,14 @@ async function generate(messages) {
   });
 
   // Tell the main thread we are starting
-  self.postMessage({ status: "start" });
+  self.postMessage({
+    status: "start"
+  });
 
-  const { past_key_values, sequences } = await model
+  const {
+    past_key_values,
+    sequences
+  } = await model
     .generate({
       ...inputs,
       // TODO: Add back when fixed
@@ -155,11 +160,16 @@ async function load() {
     self.postMessage(x);
   });
 
-  self.postMessage({ status: "ready" });
+  self.postMessage({
+    status: "ready"
+  });
 }
 // Listen for messages from the main thread
 self.addEventListener("message", async (e) => {
-  const { type, data } = e.data;
+  const {
+    type,
+    data
+  } = e.data;
 
   switch (type) {
     case "check":

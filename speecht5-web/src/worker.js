@@ -4,7 +4,9 @@ import {
   SpeechT5ForTextToSpeech,
   SpeechT5HifiGan,
 } from "@huggingface/transformers";
-import { encodeWAV } from "./utils";
+import {
+  encodeWAV
+} from "./utils";
 
 // Use the Singleton pattern to enable lazy construction of the pipeline.
 class MyTextToSpeechPipeline {
@@ -24,8 +26,7 @@ class MyTextToSpeechPipeline {
     });
 
     this.model_instance ??= SpeechT5ForTextToSpeech.from_pretrained(
-      this.model_id,
-      {
+      this.model_id, {
         dtype: "fp32",
         progress_callback,
       },
@@ -77,7 +78,9 @@ self.addEventListener("message", async (event) => {
   );
 
   // Tokenize the input
-  const { input_ids } = tokenizer(event.data.text);
+  const {
+    input_ids
+  } = tokenizer(event.data.text);
 
   // Load the speaker embeddings
   let speaker_embeddings = speaker_embeddings_cache.get(event.data.speaker_id);
@@ -89,10 +92,13 @@ self.addEventListener("message", async (event) => {
   }
 
   // Generate the waveform
-  const { waveform } = await model.generate_speech(
+  const {
+    waveform
+  } = await model.generate_speech(
     input_ids,
-    speaker_embeddings,
-    { vocoder },
+    speaker_embeddings, {
+      vocoder
+    },
   );
 
   // Encode the waveform as a WAV file
@@ -101,6 +107,8 @@ self.addEventListener("message", async (event) => {
   // Send the output back to the main thread
   self.postMessage({
     status: "complete",
-    output: new Blob([wav], { type: "audio/wav" }),
+    output: new Blob([wav], {
+      type: "audio/wav"
+    }),
   });
 });

@@ -52,11 +52,9 @@ async function generate(messages) {
   // Retrieve the text-generation pipeline.
   const [tokenizer, model] = await TextGenerationPipeline.getInstance();
 
-  messages = [
-    {
+  messages = [{
       role: "system",
-      content:
-        "You are MiniThinky, a helpful AI assistant. You always think before giving the answer. Use <|thinking|> before thinking and <|answer|> before giving the answer.",
+      content: "You are MiniThinky, a helpful AI assistant. You always think before giving the answer. Use <|thinking|> before thinking and <|answer|> before giving the answer.",
     },
     ...messages,
   ];
@@ -68,8 +66,9 @@ async function generate(messages) {
   // 128011: <|thinking|>
   // 128012: <|answer|>
   const [THINKING_TOKEN_ID, ANSWER_TOKEN_ID] = tokenizer.encode(
-    "<|thinking|><|answer|>",
-    { add_special_tokens: false },
+    "<|thinking|><|answer|>", {
+      add_special_tokens: false
+    },
   );
 
   let state = "thinking"; // 'thinking' or 'answering'
@@ -104,9 +103,14 @@ async function generate(messages) {
   });
 
   // Tell the main thread we are starting
-  self.postMessage({ status: "start" });
+  self.postMessage({
+    status: "start"
+  });
 
-  const { past_key_values, sequences } = await model.generate({
+  const {
+    past_key_values,
+    sequences
+  } = await model.generate({
     ...inputs,
     // TODO: Add back when fixed
     // past_key_values: past_key_values_cache,
@@ -155,12 +159,20 @@ async function load() {
 
   // Run model with dummy input to compile shaders
   const inputs = tokenizer("a");
-  await model.generate({ ...inputs, max_new_tokens: 1 });
-  self.postMessage({ status: "ready" });
+  await model.generate({
+    ...inputs,
+    max_new_tokens: 1
+  });
+  self.postMessage({
+    status: "ready"
+  });
 }
 // Listen for messages from the main thread
 self.addEventListener("message", async (e) => {
-  const { type, data } = e.data;
+  const {
+    type,
+    data
+  } = e.data;
 
   switch (type) {
     case "check":

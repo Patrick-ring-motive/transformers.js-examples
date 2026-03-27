@@ -1,4 +1,6 @@
-const { pipeline } = require("@huggingface/transformers");
+const {
+  pipeline
+} = require("@huggingface/transformers");
 
 async function main() {
   const classifier = await pipeline("text-classification");

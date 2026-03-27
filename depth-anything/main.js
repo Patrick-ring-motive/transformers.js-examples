@@ -1,7 +1,12 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import {
+  OrbitControls
+} from "three/addons/controls/OrbitControls.js";
 
-import { pipeline, RawImage } from "@huggingface/transformers";
+import {
+  pipeline,
+  RawImage
+} from "@huggingface/transformers";
 
 // Constants
 const EXAMPLE_URL =
@@ -27,7 +32,7 @@ example.addEventListener("click", (e) => {
   predict(EXAMPLE_URL);
 });
 
-fileUpload.addEventListener("change", function (e) {
+fileUpload.addEventListener("change", function(e) {
   const file = e.target.files[0];
   if (!file) {
     return;
@@ -49,7 +54,10 @@ async function predict(url) {
   const image = await RawImage.fromURL(url);
 
   // Set up scene and slider controls
-  const { canvas, setDisplacementMap } = setupScene(
+  const {
+    canvas,
+    setDisplacementMap
+  } = setupScene(
     url,
     image.width,
     image.height,
@@ -58,7 +66,9 @@ async function predict(url) {
   imageContainer.append(canvas);
 
   status.textContent = "Analysing...";
-  const { depth } = await depth_estimator(image);
+  const {
+    depth
+  } = await depth_estimator(image);
 
   setDisplacementMap(depth.toCanvas());
   status.textContent = "";
@@ -89,7 +99,10 @@ function setupScene(url, w, h) {
   camera.position.z = 2;
   scene.add(camera);
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true
+  });
   renderer.setSize(width, height);
   renderer.setPixelRatio(window.devicePixelRatio);
 

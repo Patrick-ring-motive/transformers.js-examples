@@ -1,4 +1,6 @@
-import { pipeline } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.2.1";
+import {
+  pipeline
+} from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.2.1";
 
 // Reference the elements that we will need
 const status = document.getElementById("status");
@@ -10,7 +12,7 @@ status.textContent = "Loading model...";
 const detector = await pipeline("object-detection", "Xenova/detr-resnet-50");
 status.textContent = "Ready";
 
-fileUpload.addEventListener("change", function (e) {
+fileUpload.addEventListener("change", function(e) {
   const file = e.target.files[0];
   if (!file) {
     return;
@@ -19,7 +21,7 @@ fileUpload.addEventListener("change", function (e) {
   const reader = new FileReader();
 
   // Set up a callback when the file is loaded
-  reader.onload = function (e2) {
+  reader.onload = function(e2) {
     imageContainer.innerHTML = "";
     const image = document.createElement("img");
     image.src = e2.target.result;
@@ -41,15 +43,23 @@ async function detect(img) {
 }
 
 // Render a bounding box and label on the image
-function renderBox({ box, label }) {
-  const { xmax, xmin, ymax, ymin } = box;
+function renderBox({
+  box,
+  label
+}) {
+  const {
+    xmax,
+    xmin,
+    ymax,
+    ymin
+  } = box;
 
   // Generate a random color for the box
   const color =
     "#" +
     Math.floor(Math.random() * 0xffffff)
-      .toString(16)
-      .padStart(6, 0);
+    .toString(16)
+    .padStart(6, 0);
 
   // Draw the box
   const boxElement = document.createElement("div");

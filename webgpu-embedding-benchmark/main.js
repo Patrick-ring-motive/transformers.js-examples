@@ -1,4 +1,7 @@
-import { AutoModel, ones } from "@huggingface/transformers";
+import {
+  AutoModel,
+  ones
+} from "@huggingface/transformers";
 import Chart from "chart.js/auto";
 
 // Throw an error if WebGPU is not supported
@@ -154,7 +157,12 @@ start.addEventListener("click", async () => {
   // NOTE: Models must be loaded sequentially (otherwise it will fail due to multiple calls to initWasm())
   const testsToRun = new Map();
   for (const test of selectedTests) {
-    const { label, dtype, device, quantized } = test;
+    const {
+      label,
+      dtype,
+      device,
+      quantized
+    } = test;
 
     const key = `${model_id}///${label}`;
 

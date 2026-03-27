@@ -1,6 +1,12 @@
-import { RawImage } from "@huggingface/transformers";
-import { Detector } from "./detector.js";
-import { Caption } from "./captioning.js";
+import {
+  RawImage
+} from "@huggingface/transformers";
+import {
+  Detector
+} from "./detector.js";
+import {
+  Caption
+} from "./captioning.js";
 
 // Load detection model
 const detector_model_id = "onnx-community/OmniParser-icon_detect";
@@ -21,12 +27,23 @@ const detections = await detector.predict(image, {
   iou_threshold: 0.7,
 });
 
-for (const { x1, x2, y1, y2, score } of detections) {
+for (const {
+    x1,
+    x2,
+    y1,
+    y2,
+    score
+  }
+  of detections) {
   // Crop image
   const bbox = [x1, y1, x2, y2].map(Math.round);
   const cropped_image = await image.crop(bbox);
 
   // Run captioning
   const text = await captioning.describe(cropped_image);
-  console.log({ text, bbox, score });
+  console.log({
+    text,
+    bbox,
+    score
+  });
 }

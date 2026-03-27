@@ -5,8 +5,12 @@ import {
   writeFileSync,
   existsSync,
 } from "fs";
-import { join } from "path";
-import { execSync } from "child_process";
+import {
+  join
+} from "path";
+import {
+  execSync
+} from "child_process";
 
 // Check if --audit_only is specified as an argument
 const auditOnly = process.argv.includes("--audit_only");
@@ -55,13 +59,22 @@ const updateDependency = (projectPath, version) => {
     // Detect lock file and run appropriate command
     if (existsSync(join(projectPath, "package-lock.json"))) {
       console.log(`Running "npm audit fix" in ${projectPath}`);
-      execSync("npm audit fix", { cwd: projectPath, stdio: "inherit" });
+      execSync("npm audit fix", {
+        cwd: projectPath,
+        stdio: "inherit"
+      });
     } else if (existsSync(join(projectPath, "bun.lockb"))) {
       console.log(`Running "bun install" in ${projectPath}`);
-      execSync("bun install", { cwd: projectPath, stdio: "inherit" });
+      execSync("bun install", {
+        cwd: projectPath,
+        stdio: "inherit"
+      });
     } else if (existsSync(join(projectPath, "deno.lock"))) {
       console.log(`Running "deno install" in ${projectPath}`);
-      execSync("deno install", { cwd: projectPath, stdio: "inherit" });
+      execSync("deno install", {
+        cwd: projectPath,
+        stdio: "inherit"
+      });
     } else {
       console.log(`No lock file detected in ${projectPath}`);
     }

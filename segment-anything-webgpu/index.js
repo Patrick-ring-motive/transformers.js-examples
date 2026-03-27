@@ -52,7 +52,10 @@ async function decode() {
   const input_labels = new Tensor("int64", labels, [1, 1, num_points]);
 
   // Generate the mask
-  const { pred_masks, iou_scores } = await model({
+  const {
+    pred_masks,
+    iou_scores
+  } = await model({
     ...imageEmbeddings,
     input_points,
     input_labels,
@@ -170,7 +173,7 @@ async function encode(url) {
 }
 
 // Handle file selection
-fileUpload.addEventListener("change", function (e) {
+fileUpload.addEventListener("change", function(e) {
   const file = e.target.files[0];
   if (!file) return;
 
@@ -229,10 +232,11 @@ function getPoint(e) {
 
   return {
     position: [mouseX, mouseY],
-    label:
-      e.button === 2 // right click
-        ? 0 // negative prompt
-        : 1, // positive prompt
+    label: e.button === 2 // right click
+      ?
+      0 // negative prompt
+      :
+      1, // positive prompt
   };
 }
 

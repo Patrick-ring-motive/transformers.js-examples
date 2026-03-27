@@ -3,7 +3,9 @@ import {
   ClapTextModelWithProjection,
   cos_sim,
 } from "@huggingface/transformers";
-import { getCachedFile } from "./utils";
+import {
+  getCachedFile
+} from "./utils";
 
 class ApplicationSingleton {
   static model_id = "Xenova/larger_clap_music_and_speech";
@@ -19,8 +21,7 @@ class ApplicationSingleton {
       progress_callback,
     });
     this.text_model ??= ClapTextModelWithProjection.from_pretrained(
-      this.model_id,
-      {
+      this.model_id, {
         progress_callback,
         // TODO allow user to select quantized or not
       },
@@ -60,10 +61,12 @@ self.addEventListener("message", async (event) => {
   // Get the tokenizer, model, and embeddings. When called for the first time,
   // this will load the files and cache them for future use.
   const [tokenizer, text_model, embeddings] =
-    await ApplicationSingleton.getInstance(self.postMessage);
+  await ApplicationSingleton.getInstance(self.postMessage);
 
   // Send the output back to the main thread
-  self.postMessage({ status: "ready" });
+  self.postMessage({
+    status: "ready"
+  });
 
   // Run tokenization
   const text_inputs = tokenizer(event.data.query, {
@@ -72,7 +75,9 @@ self.addEventListener("message", async (event) => {
   });
 
   // Compute embeddings
-  const { text_embeds } = await text_model(text_inputs);
+  const {
+    text_embeds
+  } = await text_model(text_inputs);
 
   // Compute similarity scores
   const scores = cosineSimilarity(text_embeds.data, embeddings);

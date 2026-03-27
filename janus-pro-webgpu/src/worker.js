@@ -45,23 +45,23 @@ class ImageGenerationPipeline {
     });
 
     this.model ??= MultiModalityCausalLM.from_pretrained(this.model_id, {
-      dtype: fp16_supported
-        ? {
-            prepare_inputs_embeds: "q4",
-            language_model: "q4f16",
-            lm_head: "fp16",
-            gen_head: "fp16",
-            gen_img_embeds: "fp16",
-            image_decode: "fp32",
-          }
-        : {
-            prepare_inputs_embeds: "fp32",
-            language_model: "q4",
-            lm_head: "fp32",
-            gen_head: "fp32",
-            gen_img_embeds: "fp32",
-            image_decode: "fp32",
-          },
+      dtype: fp16_supported ?
+        {
+          prepare_inputs_embeds: "q4",
+          language_model: "q4f16",
+          lm_head: "fp16",
+          gen_head: "fp16",
+          gen_img_embeds: "fp16",
+          image_decode: "fp32",
+        } :
+        {
+          prepare_inputs_embeds: "fp32",
+          language_model: "q4",
+          lm_head: "fp32",
+          gen_head: "fp32",
+          gen_img_embeds: "fp32",
+          image_decode: "fp32",
+        },
       device: {
         prepare_inputs_embeds: "wasm", // TODO use "webgpu" when bug is fixed
         language_model: "webgpu",
@@ -117,7 +117,9 @@ async function generate(messages) {
   const message = messages.at(-1);
 
   // Tell the main thread we are starting
-  self.postMessage({ status: "start" });
+  self.postMessage({
+    status: "start"
+  });
 
   // Load the pipeline
   const [processor, model] = await ImageGenerationPipeline.getInstance();
@@ -126,12 +128,10 @@ async function generate(messages) {
   if (message.content.startsWith(IMAGE_GENERATION_COMMAND_PREFIX)) {
     const text = message.content.replace(IMAGE_GENERATION_COMMAND_PREFIX, "");
 
-    const conversation = [
-      {
-        role: "<|User|>", // uses title case
-        content: text,
-      },
-    ];
+    const conversation = [{
+      role: "<|User|>", // uses title case
+      content: text,
+    }, ];
     const inputs = await processor(conversation, {
       chat_template: "text_to_image",
     });
@@ -163,25 +163,21 @@ async function generate(messages) {
     });
   } else {
     const inputs = await processor(
-      message.image
-        ? [
-            {
-              role: "<|User|>",
-              content: "<image_placeholder>\n" + message.content,
-              images: [message.image],
-            },
-          ]
-        : [
-            {
-              role: "<|System|>",
-              content:
-                "You are a helpful assistant. Answer the user's questions in a concise manner.",
-            },
-            {
-              role: "<|User|>",
-              content: message.content,
-            },
-          ],
+      message.image ?
+      [{
+        role: "<|User|>",
+        content: "<image_placeholder>\n" + message.content,
+        images: [message.image],
+      }, ] :
+      [{
+          role: "<|System|>",
+          content: "You are a helpful assistant. Answer the user's questions in a concise manner.",
+        },
+        {
+          role: "<|User|>",
+          content: message.content,
+        },
+      ],
     );
 
     let startTime;
@@ -239,12 +235,17 @@ async function load() {
     self.postMessage(x);
   });
 
-  self.postMessage({ status: "ready" });
+  self.postMessage({
+    status: "ready"
+  });
 }
 
 // Listen for messages from the main thread
 self.addEventListener("message", async (e) => {
-  const { type, data } = e.data;
+  const {
+    type,
+    data
+  } = e.data;
 
   switch (type) {
     case "check":

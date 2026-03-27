@@ -1,6 +1,15 @@
-import { readdirSync, lstatSync, existsSync, readFileSync } from "fs";
-import { join } from "path";
-import { execSync } from "child_process";
+import {
+  readdirSync,
+  lstatSync,
+  existsSync,
+  readFileSync
+} from "fs";
+import {
+  join
+} from "path";
+import {
+  execSync
+} from "child_process";
 
 // Function to run build command if a 'build' script is present in package.json
 const buildProject = (projectPath) => {
@@ -14,7 +23,10 @@ const buildProject = (projectPath) => {
         console.log(
           `'build' script detected in ${projectPath}. Running npm run build...`,
         );
-        execSync("npm run build", { cwd: projectPath, stdio: "inherit" });
+        execSync("npm run build", {
+          cwd: projectPath,
+          stdio: "inherit"
+        });
       } catch (error) {
         console.error(`Failed to build ${projectPath}:`, error.message);
       }

@@ -65,9 +65,14 @@ async function generate(messages) {
   });
 
   // Tell the main thread we are starting
-  self.postMessage({ status: "start" });
+  self.postMessage({
+    status: "start"
+  });
 
-  const { past_key_values, sequences } = await model.generate({
+  const {
+    past_key_values,
+    sequences
+  } = await model.generate({
     ...inputs,
     // TODO: Add when model is fixed
     // past_key_values: past_key_values_cache,
@@ -127,12 +132,20 @@ async function load() {
 
   // Run model with dummy input to compile shaders
   const inputs = tokenizer("a");
-  await model.generate({ ...inputs, max_new_tokens: 1 });
-  self.postMessage({ status: "ready" });
+  await model.generate({
+    ...inputs,
+    max_new_tokens: 1
+  });
+  self.postMessage({
+    status: "ready"
+  });
 }
 // Listen for messages from the main thread
 self.addEventListener("message", async (e) => {
-  const { type, data } = e.data;
+  const {
+    type,
+    data
+  } = e.data;
 
   switch (type) {
     case "check":

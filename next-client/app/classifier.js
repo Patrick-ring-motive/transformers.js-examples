@@ -1,7 +1,13 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { pipeline } from "@huggingface/transformers";
+import {
+  useEffect,
+  useState,
+  useRef
+} from "react";
+import {
+  pipeline
+} from "@huggingface/transformers";
 
 export default function Classifier() {
   const [text, setText] = useState("I love Transformers.js!");
@@ -22,17 +28,23 @@ export default function Classifier() {
     });
   }, [text]);
 
-  return (
-    <>
-      <input
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        className="border border-gray-300 rounded p-2 dark:bg-black dark:text-white w-full"
-      ></input>
+  return ( <
+    >
+    <
+    input value = {
+      text
+    }
+    onChange = {
+      (e) => setText(e.target.value)
+    }
+    className = "border border-gray-300 rounded p-2 dark:bg-black dark:text-white w-full" >
+    < /input>
 
-      <pre className="border border-gray-300 rounded p-2 dark:bg-black dark:text-white w-full min-h-[120px]">
-        {result ? JSON.stringify(result, null, 2) : "Loading…"}
-      </pre>
-    </>
+    <
+    pre className = "border border-gray-300 rounded p-2 dark:bg-black dark:text-white w-full min-h-[120px]" > {
+      result ? JSON.stringify(result, null, 2) : "Loading…"
+    } <
+    /pre> <
+    />
   );
 }

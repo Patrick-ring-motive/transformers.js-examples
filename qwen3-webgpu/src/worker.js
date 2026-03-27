@@ -48,7 +48,10 @@ class TextGenerationPipeline {
 const stopping_criteria = new InterruptableStoppingCriteria();
 
 let past_key_values_cache = null;
-async function generate({ messages, reasonEnabled }) {
+async function generate({
+  messages,
+  reasonEnabled
+}) {
   // Retrieve the text-generation pipeline.
   const [tokenizer, model] = await TextGenerationPipeline.getInstance();
 
@@ -59,8 +62,9 @@ async function generate({ messages, reasonEnabled }) {
   });
 
   const [START_THINKING_TOKEN_ID, END_THINKING_TOKEN_ID] = tokenizer.encode(
-    "<think></think>",
-    { add_special_tokens: false },
+    "<think></think>", {
+      add_special_tokens: false
+    },
   );
 
   let state = "answering"; // 'thinking' or 'answering'
@@ -101,9 +105,14 @@ async function generate({ messages, reasonEnabled }) {
   });
 
   // Tell the main thread we are starting
-  self.postMessage({ status: "start" });
+  self.postMessage({
+    status: "start"
+  });
 
-  const { past_key_values, sequences } = await model.generate({
+  const {
+    past_key_values,
+    sequences
+  } = await model.generate({
     ...inputs,
     past_key_values: past_key_values_cache,
 
@@ -151,12 +160,20 @@ async function load() {
 
   // Run model with dummy input to compile shaders
   const inputs = tokenizer("a");
-  await model.generate({ ...inputs, max_new_tokens: 1 });
-  self.postMessage({ status: "ready" });
+  await model.generate({
+    ...inputs,
+    max_new_tokens: 1
+  });
+  self.postMessage({
+    status: "ready"
+  });
 }
 // Listen for messages from the main thread
 self.addEventListener("message", async (e) => {
-  const { type, data } = e.data;
+  const {
+    type,
+    data
+  } = e.data;
 
   switch (type) {
     case "check":

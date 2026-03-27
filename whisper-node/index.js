@@ -1,11 +1,19 @@
-import { pipeline } from "@huggingface/transformers";
-import { read_audio } from "./utils.js";
+import {
+  pipeline
+} from "@huggingface/transformers";
+import {
+  read_audio
+} from "./utils.js";
 
 // Load model
 const transcriber = await pipeline(
   "automatic-speech-recognition",
-  "onnx-community/whisper-tiny.en",
-  { dtype: { encoder_model: "fp32", decoder_model_merged: "q4" } },
+  "onnx-community/whisper-tiny.en", {
+    dtype: {
+      encoder_model: "fp32",
+      decoder_model_merged: "q4"
+    }
+  },
 );
 
 // Load audio data

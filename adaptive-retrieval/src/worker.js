@@ -1,4 +1,6 @@
-import { pipeline } from "@huggingface/transformers";
+import {
+  pipeline
+} from "@huggingface/transformers";
 
 class MyFeatureExtractionPipeline {
   static task = "feature-extraction";
@@ -29,14 +31,17 @@ self.addEventListener("message", async (event) => {
     self.postMessage(x);
   });
 
-  const { source, text } = event.data;
+  const {
+    source,
+    text
+  } = event.data;
 
   const split = [
     SEARCH_PREFIX + source,
     ...text
-      .trim()
-      .split("\n")
-      .map((x) => DOCUMENT_PREFIX + x),
+    .trim()
+    .split("\n")
+    .map((x) => DOCUMENT_PREFIX + x),
   ];
   const embeddings = await extractor(split, {
     pooling: "mean",
@@ -44,5 +49,8 @@ self.addEventListener("message", async (event) => {
   });
 
   // Send the output back to the main thread
-  self.postMessage({ status: "complete", embeddings: embeddings.tolist() });
+  self.postMessage({
+    status: "complete",
+    embeddings: embeddings.tolist()
+  });
 });

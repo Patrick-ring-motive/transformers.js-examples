@@ -1,5 +1,7 @@
 import path from "path";
-import { fileURLToPath } from "url";
+import {
+  fileURLToPath
+} from "url";
 
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import CopyPlugin from "copy-webpack-plugin";
@@ -36,8 +38,7 @@ const config = {
       filename: "popup.html",
     }),
     new CopyPlugin({
-      patterns: [
-        {
+      patterns: [{
           from: "public",
           to: ".", // Copies to build folder
         },

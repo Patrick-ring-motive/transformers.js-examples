@@ -1,8 +1,13 @@
 // background.js - Handles requests from the UI, runs the model, then sends back a response
 
-import { env, pipeline } from "@huggingface/transformers";
+import {
+  env,
+  pipeline
+} from "@huggingface/transformers";
 
-import { CONTEXT_MENU_ITEM_ID } from "./constants.js";
+import {
+  CONTEXT_MENU_ITEM_ID
+} from "./constants.js";
 
 // If you'd like to use a local model instead of loading the model
 // from the Hugging Face Hub, you can remove this line.
@@ -21,8 +26,7 @@ class Singleton {
     return (this.fn ??= async (...args) => {
       this.instance ??= pipeline(
         "text-classification",
-        "Xenova/distilbert-base-uncased-finetuned-sst-2-english",
-        {
+        "Xenova/distilbert-base-uncased-finetuned-sst-2-english", {
           progress_callback,
           device: "webgpu",
           dtype: "q4",
@@ -54,7 +58,7 @@ const classify = async (text) => {
 //
 // Add a listener to create the initial context menu items,
 // context menu items only need to be created at runtime.onInstalled
-chrome.runtime.onInstalled.addListener(function () {
+chrome.runtime.onInstalled.addListener(function() {
   // Register a context menu item that will only show up for selection text.
   chrome.contextMenus.create({
     id: CONTEXT_MENU_ITEM_ID,
@@ -73,7 +77,9 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
   // Do something with the result
   chrome.scripting.executeScript({
-    target: { tabId: tab.id }, // Run in the tab that the user clicked in
+    target: {
+      tabId: tab.id
+    }, // Run in the tab that the user clicked in
     args: [result], // The arguments to pass to the function
     function: (result) => {
       // The function to run
@@ -92,7 +98,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action !== "classify") return; // Ignore messages that are not meant for classification.
 
   // Run model prediction asynchronously
-  (async function () {
+  (async function() {
     // Perform classification
     const result = await classify(message.text);
 

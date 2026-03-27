@@ -26,8 +26,7 @@ class AutomaticSpeechRecognitionPipeline {
     });
 
     this.model ??= WhisperForConditionalGeneration.from_pretrained(
-      this.model_id,
-      {
+      this.model_id, {
         dtype: {
           encoder_model: "fp32", // 'fp16' works too
           decoder_model_merged: "q4", // or 'fp32' ('fp16' is broken)
@@ -42,16 +41,21 @@ class AutomaticSpeechRecognitionPipeline {
 }
 
 let processing = false;
-async function generate({ audio, language }) {
+async function generate({
+  audio,
+  language
+}) {
   if (processing) return;
   processing = true;
 
   // Tell the main thread we are starting
-  self.postMessage({ status: "start" });
+  self.postMessage({
+    status: "start"
+  });
 
   // Retrieve the text-generation pipeline.
   const [tokenizer, processor, model] =
-    await AutomaticSpeechRecognitionPipeline.getInstance();
+  await AutomaticSpeechRecognitionPipeline.getInstance();
 
   let startTime;
   let numTokens = 0;
@@ -108,11 +112,11 @@ async function load() {
 
   // Load the pipeline and save it for future use.
   const [tokenizer, processor, model] =
-    await AutomaticSpeechRecognitionPipeline.getInstance((x) => {
-      // We also add a progress callback to the pipeline so that we can
-      // track model loading.
-      self.postMessage(x);
-    });
+  await AutomaticSpeechRecognitionPipeline.getInstance((x) => {
+    // We also add a progress callback to the pipeline so that we can
+    // track model loading.
+    self.postMessage(x);
+  });
 
   self.postMessage({
     status: "loading",
@@ -124,12 +128,17 @@ async function load() {
     input_features: full([1, 80, 3000], 0.0),
     max_new_tokens: 1,
   });
-  self.postMessage({ status: "ready" });
+  self.postMessage({
+    status: "ready"
+  });
 }
 
 // Listen for messages from the main thread
 self.addEventListener("message", async (e) => {
-  const { type, data } = e.data;
+  const {
+    type,
+    data
+  } = e.data;
 
   switch (type) {
     case "load":

@@ -1,7 +1,9 @@
 // Although not strictly necessary, we delegate the tokenization to a worker thread to avoid
 // any potential issues with the tokenizer blocking the main thread (especially for large inputs).
 
-import { AutoTokenizer } from "@huggingface/transformers";
+import {
+  AutoTokenizer
+} from "@huggingface/transformers";
 
 // This is a map of all the tokenizer instances that we have loaded.
 // model_id -> promise that resolves to tokenizer
@@ -9,7 +11,10 @@ const TOKENIZER_MAPPINGS = new Map();
 
 // Listen for messages from the main thread
 self.addEventListener("message", async (event) => {
-  const { model_id, text } = event.data;
+  const {
+    model_id,
+    text
+  } = event.data;
 
   // Only load the tokenizer if it hasn't been loaded yet
   let tokenizerPromise = TOKENIZER_MAPPINGS.get(model_id);

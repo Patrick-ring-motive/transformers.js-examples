@@ -60,8 +60,9 @@ async function generate(messages) {
   // 151648: <think>
   // 151649: </think>
   const [START_THINKING_TOKEN_ID, END_THINKING_TOKEN_ID] = tokenizer.encode(
-    "<think></think>",
-    { add_special_tokens: false },
+    "<think></think>", {
+      add_special_tokens: false
+    },
   );
 
   let state = "thinking"; // 'thinking' or 'answering'
@@ -96,9 +97,14 @@ async function generate(messages) {
   });
 
   // Tell the main thread we are starting
-  self.postMessage({ status: "start" });
+  self.postMessage({
+    status: "start"
+  });
 
-  const { past_key_values, sequences } = await model.generate({
+  const {
+    past_key_values,
+    sequences
+  } = await model.generate({
     ...inputs,
     // TODO: Add back when fixed
     // past_key_values: past_key_values_cache,
@@ -147,12 +153,20 @@ async function load() {
 
   // Run model with dummy input to compile shaders
   const inputs = tokenizer("a");
-  await model.generate({ ...inputs, max_new_tokens: 1 });
-  self.postMessage({ status: "ready" });
+  await model.generate({
+    ...inputs,
+    max_new_tokens: 1
+  });
+  self.postMessage({
+    status: "ready"
+  });
 }
 // Listen for messages from the main thread
 self.addEventListener("message", async (e) => {
-  const { type, data } = e.data;
+  const {
+    type,
+    data
+  } = e.data;
 
   switch (type) {
     case "check":

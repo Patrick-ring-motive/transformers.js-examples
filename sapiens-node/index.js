@@ -9,16 +9,19 @@ import {
 
 // Load segmentation, depth, and normal estimation models
 const segment = await SapiensForSemanticSegmentation.from_pretrained(
-  "onnx-community/sapiens-seg-0.3b",
-  { dtype: "q8" },
+  "onnx-community/sapiens-seg-0.3b", {
+    dtype: "q8"
+  },
 );
 const depth = await SapiensForDepthEstimation.from_pretrained(
-  "onnx-community/sapiens-depth-0.3b",
-  { dtype: "q4" },
+  "onnx-community/sapiens-depth-0.3b", {
+    dtype: "q4"
+  },
 );
 const normal = await SapiensForNormalEstimation.from_pretrained(
-  "onnx-community/sapiens-normal-0.3b",
-  { dtype: "q4" },
+  "onnx-community/sapiens-normal-0.3b", {
+    dtype: "q4"
+  },
 );
 
 // Load processor
@@ -34,28 +37,38 @@ const inputs = await processor(image);
 console.time("segmentation");
 const segmentation_outputs = await segment(inputs); // [1, 28, 512, 384]
 console.timeEnd("segmentation");
-const { segmentation } =
-  processor.feature_extractor.post_process_semantic_segmentation(
-    segmentation_outputs,
-    inputs.original_sizes,
-  )[0];
+const {
+  segmentation
+} =
+processor.feature_extractor.post_process_semantic_segmentation(
+  segmentation_outputs,
+  inputs.original_sizes,
+)[0];
 
 // Run depth estimation model
 console.time("depth");
-const { predicted_depth } = await depth(inputs); // [1, 1, 1024, 768]
+const {
+  predicted_depth
+} = await depth(inputs); // [1, 1, 1024, 768]
 console.timeEnd("depth");
 
 // Run normal estimation model
 console.time("normal");
-const { predicted_normal } = await normal(inputs); // [1, 3, 512, 384]
+const {
+  predicted_normal
+} = await normal(inputs); // [1, 3, 512, 384]
 console.timeEnd("normal");
 
 console.time("post-processing");
 
 // Resize predicted depth and normal maps to the original image size
 const size = [image.height, image.width];
-const depth_map = await interpolate_4d(predicted_depth, { size });
-const normal_map = await interpolate_4d(predicted_normal, { size });
+const depth_map = await interpolate_4d(predicted_depth, {
+  size
+});
+const normal_map = await interpolate_4d(predicted_normal, {
+  size
+});
 
 // Use the segmentation mask to remove the background
 const stride = size[0] * size[1];

@@ -1,5 +1,9 @@
-import { PGlite } from "@electric-sql/pglite";
-import { vector } from "@electric-sql/pglite/vector";
+import {
+  PGlite
+} from "@electric-sql/pglite";
+import {
+  vector
+} from "@electric-sql/pglite/vector";
 
 let dbInstance;
 

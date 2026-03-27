@@ -1,4 +1,6 @@
-import { decode } from "blurhash";
+import {
+  decode
+} from "blurhash";
 
 const SIZE = 32;
 
@@ -36,11 +38,11 @@ function downloadData(url, filename) {
 
 export function downloadImage(url, filename) {
   fetch(url, {
-    headers: new Headers({
-      Origin: location.origin,
-    }),
-    mode: "cors",
-  })
+      headers: new Headers({
+        Origin: location.origin,
+      }),
+      mode: "cors",
+    })
     .then((response) => response.blob())
     .then((blob) => {
       let blobUrl = window.URL.createObjectURL(blob);

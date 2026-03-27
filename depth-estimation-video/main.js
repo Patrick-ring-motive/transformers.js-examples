@@ -50,10 +50,16 @@ const processor = await AutoImageProcessor.from_pretrained(model_id);
 
 // Set up controls
 let size = 504;
-processor.size = { width: size, height: size };
+processor.size = {
+  width: size,
+  height: size
+};
 sizeSlider.addEventListener("input", () => {
   size = Number(sizeSlider.value);
-  processor.size = { width: size, height: size };
+  processor.size = {
+    width: size,
+    height: size
+  };
   sizeLabel.textContent = size;
 });
 sizeSlider.disabled = false;
@@ -70,16 +76,22 @@ status.textContent = "Ready";
 
 let isProcessing = false;
 let previousTime;
-const context = canvas.getContext("2d", { willReadFrequently: true });
+const context = canvas.getContext("2d", {
+  willReadFrequently: true
+});
 const outputContext = outputCanvas.getContext("2d", {
   willReadFrequently: true,
 });
+
 function updateCanvas() {
-  const { width, height } = canvas;
+  const {
+    width,
+    height
+  } = canvas;
 
   if (!isProcessing) {
     isProcessing = true;
-    (async function () {
+    (async function() {
       // Read the current frame from the video
       context.drawImage(video, 0, 0, width, height);
       const currentFrame = context.getImageData(0, 0, width, height);
@@ -89,7 +101,9 @@ function updateCanvas() {
       const inputs = await processor(image);
 
       // Predict depth map
-      const { predicted_depth } = await model(inputs);
+      const {
+        predicted_depth
+      } = await model(inputs);
       const data = predicted_depth.data;
       const [bs, oh, ow] = predicted_depth.dims;
 
@@ -131,8 +145,12 @@ function updateCanvas() {
 
 // Start the video stream
 navigator.mediaDevices
-  .getUserMedia(
-    { video: { width: 720, height: 720 } }, // Ask for square video
+  .getUserMedia({
+      video: {
+        width: 720,
+        height: 720
+      }
+    }, // Ask for square video
   )
   .then((stream) => {
     // Set up the video and canvas elements.
@@ -140,7 +158,10 @@ navigator.mediaDevices
     video.play();
 
     const videoTrack = stream.getVideoTracks()[0];
-    const { width, height } = videoTrack.getSettings();
+    const {
+      width,
+      height
+    } = videoTrack.getSettings();
 
     setStreamSize(width * scale, height * scale);
 

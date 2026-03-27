@@ -1,11 +1,15 @@
-import { Scatterplot } from "deepscatter";
-import { getCachedJSON } from "./utils";
+import {
+  Scatterplot
+} from "deepscatter";
+import {
+  getCachedJSON
+} from "./utils";
 
 // Start loading metadata and positions asynchronously as soon as possible.
 let metadata = {};
 getCachedJSON(
-  "https://huggingface.co/datasets/Xenova/MusicBenchEmbedded/resolve/main/metadata.json",
-)
+    "https://huggingface.co/datasets/Xenova/MusicBenchEmbedded/resolve/main/metadata.json",
+  )
   .then((data) => {
     metadata = data;
   })
@@ -13,8 +17,8 @@ getCachedJSON(
 
 let positions = {};
 getCachedJSON(
-  "https://huggingface.co/datasets/Xenova/MusicBenchEmbedded/resolve/main/positions.json",
-)
+    "https://huggingface.co/datasets/Xenova/MusicBenchEmbedded/resolve/main/positions.json",
+  )
   .then((data) => {
     positions = data;
   })
@@ -26,8 +30,7 @@ window.scatterplot = scatterplot; // For debugging
 // Initial call
 scatterplot
   .plotAPI({
-    source_url:
-      "https://huggingface.co/datasets/Xenova/MusicBenchEmbedded/resolve/main/atlas",
+    source_url: "https://huggingface.co/datasets/Xenova/MusicBenchEmbedded/resolve/main/atlas",
     max_points: 52768, // a full cap.
     alpha: 35, // Target saturation for the full page.
     zoom_balance: 0.5, // Rate at which points increase size. https://observablehq.com/@bmschmidt/zoom-strategies-for-huge-scatterplots-with-three-js

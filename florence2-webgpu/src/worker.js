@@ -27,8 +27,7 @@ class Florence2Singleton {
 
     this.supports_fp16 ??= await hasFp16();
     this.model ??= Florence2ForConditionalGeneration.from_pretrained(
-      this.model_id,
-      {
+      this.model_id, {
         dtype: {
           embed_tokens: this.supports_fp16 ? "fp16" : "fp32",
           vision_encoder: this.supports_fp16 ? "fp16" : "fp32",
@@ -75,14 +74,20 @@ async function load() {
     max_new_tokens: 1,
   });
 
-  self.postMessage({ status: "ready" });
+  self.postMessage({
+    status: "ready"
+  });
 }
 
 const TASKS_WITH_INPUTS = ["<CAPTION_TO_PHRASE_GROUNDING>"];
 
 let vision_inputs;
 let image_size;
-async function run({ text, url, task }) {
+async function run({
+  text,
+  url,
+  task
+}) {
   const [model, tokenizer, processor] = await Florence2Singleton.getInstance();
 
   // Read and preprocess image
@@ -124,12 +129,19 @@ async function run({ text, url, task }) {
 
   const end = performance.now();
 
-  self.postMessage({ status: "complete", result, time: end - start });
+  self.postMessage({
+    status: "complete",
+    result,
+    time: end - start
+  });
 }
 
 // Listen for messages from the main thread
 self.addEventListener("message", async (e) => {
-  const { type, data } = e.data;
+  const {
+    type,
+    data
+  } = e.data;
 
   switch (type) {
     case "load":

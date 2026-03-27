@@ -1,11 +1,19 @@
-import { pipeline } from "@huggingface/transformers";
-import { read_audio } from "./utils.js";
+import {
+  pipeline
+} from "@huggingface/transformers";
+import {
+  read_audio
+} from "./utils.js";
 
 // Load model
 const transcriber = await pipeline(
   "automatic-speech-recognition",
-  "onnx-community/whisper-tiny.en_timestamped",
-  { dtype: { encoder_model: "fp32", decoder_model_merged: "q4" } },
+  "onnx-community/whisper-tiny.en_timestamped", {
+    dtype: {
+      encoder_model: "fp32",
+      decoder_model_merged: "q4"
+    }
+  },
 );
 
 // Load audio data
@@ -16,7 +24,9 @@ const audio = await read_audio(
 
 // Run model w/ default settings
 console.time("Execution time");
-const output = await transcriber(audio, { return_timestamps: "word" });
+const output = await transcriber(audio, {
+  return_timestamps: "word"
+});
 console.timeEnd("Execution time");
 console.log(output);
 // {

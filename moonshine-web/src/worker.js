@@ -1,4 +1,8 @@
-import { AutoModel, Tensor, pipeline } from "@huggingface/transformers";
+import {
+  AutoModel,
+  Tensor,
+  pipeline
+} from "@huggingface/transformers";
 import {
   MAX_BUFFER_DURATION,
   SAMPLE_RATE,
@@ -9,10 +13,15 @@ import {
   MIN_SILENCE_DURATION_SAMPLES,
   MIN_SPEECH_DURATION_SAMPLES,
 } from "./constants";
-import { supportsWebGPU } from "./utils";
+import {
+  supportsWebGPU
+} from "./utils";
 
 const device = (await supportsWebGPU()) ? "webgpu" : "wasm";
-self.postMessage({ type: "info", message: `Using device: "${device}"` });
+self.postMessage({
+  type: "info",
+  message: `Using device: "${device}"`
+});
 self.postMessage({
   type: "info",
   message: "Loading models...",
@@ -21,13 +30,16 @@ self.postMessage({
 
 // Load models
 const silero_vad = await AutoModel.from_pretrained(
-  "onnx-community/silero-vad",
-  {
-    config: { model_type: "custom" },
+  "onnx-community/silero-vad", {
+    config: {
+      model_type: "custom"
+    },
     dtype: "fp32", // Full-precision
   },
 ).catch((error) => {
-  self.postMessage({ error });
+  self.postMessage({
+    error
+  });
   throw error;
 });
 
@@ -49,12 +61,18 @@ const transcriber = await pipeline(
     dtype: DEVICE_DTYPE_CONFIGS[device],
   },
 ).catch((error) => {
-  self.postMessage({ error });
+  self.postMessage({
+    error
+  });
   throw error;
 });
 
 await transcriber(new Float32Array(SAMPLE_RATE)); // Compile shaders
-self.postMessage({ type: "status", status: "ready", message: "Ready!" });
+self.postMessage({
+  type: "status",
+  status: "ready",
+  message: "Ready!"
+});
 
 // Transformers.js currently doesn't support simultaneous inference,
 // so we need to chain the inference promises.
@@ -79,8 +97,15 @@ let isRecording = false;
 async function vad(buffer) {
   const input = new Tensor("float32", buffer, [1, buffer.length]);
 
-  const { stateN, output } = await (inferenceChain = inferenceChain.then((_) =>
-    silero_vad({ input, sr, state }),
+  const {
+    stateN,
+    output
+  } = await (inferenceChain = inferenceChain.then((_) =>
+    silero_vad({
+      input,
+      sr,
+      state
+    }),
   ));
   state = stateN; // Update state
 
@@ -101,10 +126,17 @@ async function vad(buffer) {
  * @param {Object} data Additional data
  */
 const transcribe = async (buffer, data) => {
-  const { text } = await (inferenceChain = inferenceChain.then((_) =>
+  const {
+    text
+  } = await (inferenceChain = inferenceChain.then((_) =>
     transcriber(buffer),
   ));
-  self.postMessage({ type: "output", buffer, message: text, ...data });
+  self.postMessage({
+    type: "output",
+    buffer,
+    message: text,
+    ...data
+  });
 };
 
 // Track the number of samples after the last speech chunk
@@ -142,7 +174,11 @@ const dispatchForTranscriptionAndResetAudioBuffer = (overflow) => {
     offset += prev.length;
   }
   paddedBuffer.set(buffer, offset);
-  transcribe(paddedBuffer, { start, end, duration });
+  transcribe(paddedBuffer, {
+    start,
+    end,
+    duration
+  });
 
   // Set overflow (if present) and reset the rest of the audio buffer
   if (overflow) {
@@ -153,7 +189,9 @@ const dispatchForTranscriptionAndResetAudioBuffer = (overflow) => {
 
 let prevBuffers = [];
 self.onmessage = async (event) => {
-  const { buffer } = event.data;
+  const {
+    buffer
+  } = event.data;
 
   const wasRecording = isRecording; // Save current state
   const isSpeech = await vad(buffer);

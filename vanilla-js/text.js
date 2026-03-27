@@ -1,4 +1,6 @@
-import { pipeline } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.2.1";
+import {
+  pipeline
+} from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.2.1";
 
 // Reference the elements that we will need
 const status = document.getElementById("status");
@@ -41,15 +43,23 @@ async function detect(img) {
 }
 
 // Render a bounding box and label on the image
-function renderBox({ box, label }) {
-  const { xmax, xmin, ymax, ymin } = box;
+function renderBox({
+  box,
+  label
+}) {
+  const {
+    xmax,
+    xmin,
+    ymax,
+    ymin
+  } = box;
 
   // Generate a random color for the box
   const color =
     "#" +
     Math.floor(Math.random() * 0xffffff)
-      .toString(16)
-      .padStart(6, 0);
+    .toString(16)
+    .padStart(6, 0);
 
   // Draw the box
   const boxElement = document.createElement("div");

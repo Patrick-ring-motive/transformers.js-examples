@@ -1,4 +1,6 @@
-import { pipeline } from "@huggingface/transformers";
+import {
+  pipeline
+} from "@huggingface/transformers";
 
 class MyZeroShotClassificationPipeline {
   static task = "zero-shot-classification";
@@ -24,7 +26,10 @@ self.addEventListener("message", async (event) => {
     self.postMessage(x);
   });
 
-  const { text, labels } = event.data;
+  const {
+    text,
+    labels
+  } = event.data;
 
   const split = text.split("\n");
   for (const line of split) {
@@ -33,8 +38,13 @@ self.addEventListener("message", async (event) => {
       multi_label: true,
     });
     // Send the output back to the main thread
-    self.postMessage({ status: "output", output });
+    self.postMessage({
+      status: "output",
+      output
+    });
   }
   // Send the output back to the main thread
-  self.postMessage({ status: "complete" });
+  self.postMessage({
+    status: "complete"
+  });
 });

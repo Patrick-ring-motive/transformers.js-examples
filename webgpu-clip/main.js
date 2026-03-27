@@ -63,7 +63,9 @@ const exp_logit_scale = Math.exp(4.6052);
 const IMAGE_SIZE = 224;
 const canvas = document.createElement("canvas");
 canvas.width = canvas.height = IMAGE_SIZE;
-const context = canvas.getContext("2d", { willReadFrequently: true });
+const context = canvas.getContext("2d", {
+  willReadFrequently: true
+});
 
 let isProcessing = false;
 let previousTime;
@@ -75,7 +77,7 @@ let labels;
 function onFrameUpdate() {
   if (!isProcessing) {
     isProcessing = true;
-    (async function () {
+    (async function() {
       // If text inputs have changed, update the embeddings
       if (
         prevTextInputs !== labelsInput.value ||
@@ -97,7 +99,9 @@ function onFrameUpdate() {
           });
 
           // Compute embeddings
-          const { text_embeds } = await text_model(text_inputs);
+          const {
+            text_embeds
+          } = await text_model(text_inputs);
           textEmbeddings = text_embeds.normalize().tolist();
         } else {
           overlay.innerHTML = "";
@@ -118,7 +122,9 @@ function onFrameUpdate() {
         const image_inputs = await processor(image);
 
         // Compute embeddings
-        const { image_embeds } = await vision_model(image_inputs);
+        const {
+          image_embeds
+        } = await vision_model(image_inputs);
         const imageEmbedding = image_embeds.normalize().tolist()[0];
 
         // Compute similarity
@@ -154,8 +160,9 @@ function onFrameUpdate() {
 
 // Start the video stream
 navigator.mediaDevices
-  .getUserMedia(
-    { video: true }, // Ask for video
+  .getUserMedia({
+      video: true
+    }, // Ask for video
   )
   .then((stream) => {
     // Set up the video and canvas elements.
@@ -163,7 +170,10 @@ navigator.mediaDevices
     video.play();
 
     const videoTrack = stream.getVideoTracks()[0];
-    const { width, height } = videoTrack.getSettings();
+    const {
+      width,
+      height
+    } = videoTrack.getSettings();
 
     video.width = width;
     video.height = height;

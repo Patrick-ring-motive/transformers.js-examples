@@ -1,4 +1,7 @@
-import { pipeline, RawImage } from "@huggingface/transformers";
+import {
+  pipeline,
+  RawImage
+} from "@huggingface/transformers";
 
 // Reference the elements that we will need
 const status = document.getElementById("status");
@@ -34,10 +37,14 @@ try {
 
 // Set up controls
 let size = 256;
-pipe.processor.feature_extractor.size = { shortest_edge: size };
+pipe.processor.feature_extractor.size = {
+  shortest_edge: size
+};
 sizeSlider.addEventListener("input", () => {
   size = Number(sizeSlider.value);
-  pipe.processor.feature_extractor.size = { shortest_edge: size };
+  pipe.processor.feature_extractor.size = {
+    shortest_edge: size
+  };
   sizeLabel.textContent = size;
 });
 sizeSlider.disabled = false;
@@ -54,16 +61,22 @@ status.textContent = "Ready";
 
 let isProcessing = false;
 let previousTime;
-const context = canvas.getContext("2d", { willReadFrequently: true });
+const context = canvas.getContext("2d", {
+  willReadFrequently: true
+});
 const outputContext = outputCanvas.getContext("2d", {
   willReadFrequently: true,
 });
+
 function updateCanvas() {
-  const { width, height } = canvas;
+  const {
+    width,
+    height
+  } = canvas;
 
   if (!isProcessing) {
     isProcessing = true;
-    (async function () {
+    (async function() {
       // Read the current frame from the video
       context.drawImage(video, 0, 0, width, height);
       const currentFrame = context.getImageData(0, 0, width, height);
@@ -94,8 +107,9 @@ function updateCanvas() {
 
 // Start the video stream
 navigator.mediaDevices
-  .getUserMedia(
-    { video: true }, // Ask for video
+  .getUserMedia({
+      video: true
+    }, // Ask for video
   )
   .then((stream) => {
     // Set up the video and canvas elements.
@@ -103,7 +117,10 @@ navigator.mediaDevices
     video.play();
 
     const videoTrack = stream.getVideoTracks()[0];
-    const { width, height } = videoTrack.getSettings();
+    const {
+      width,
+      height
+    } = videoTrack.getSettings();
 
     setStreamSize(width * scale, height * scale);
 

@@ -1,4 +1,8 @@
-import { AutoModel, AutoProcessor, RawImage } from "@huggingface/transformers";
+import {
+  AutoModel,
+  AutoProcessor,
+  RawImage
+} from "@huggingface/transformers";
 
 /**
  * @typedef {Object} Detection
@@ -67,14 +71,22 @@ export class Detector {
    * @returns {Promise<Detection[]>} The list of detections
    */
   async predict(
-    input,
-    { confidence_threshold = 0.25, iou_threshold = 0.7 } = {},
+    input, {
+      confidence_threshold = 0.25,
+      iou_threshold = 0.7
+    } = {},
   ) {
     const image = await RawImage.read(input);
-    const { pixel_values } = await this.processor(image);
+    const {
+      pixel_values
+    } = await this.processor(image);
 
     // Run detection
-    const { output0 } = await this.model({ images: pixel_values });
+    const {
+      output0
+    } = await this.model({
+      images: pixel_values
+    });
 
     // Post-process output
     const permuted = output0[0].transpose(1, 0);
@@ -98,14 +110,22 @@ export class Detector {
       const y2 = ((yc + h / 2) / scaledHeight) * image.height;
 
       // Add to result
-      result.push({ x1, x2, y1, y2, score });
+      result.push({
+        x1,
+        x2,
+        y1,
+        y2,
+        score
+      });
     }
 
     return nms(result, iou_threshold);
   }
 
   static async from_pretrained(model_id) {
-    const model = await AutoModel.from_pretrained(model_id, { dtype: "fp32" });
+    const model = await AutoModel.from_pretrained(model_id, {
+      dtype: "fp32"
+    });
     const processor = await AutoProcessor.from_pretrained(model_id);
     return new Detector(model, processor);
   }

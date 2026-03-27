@@ -6,8 +6,9 @@ import {
 
 // Load model and processor
 const depth = await AutoModelForDepthEstimation.from_pretrained(
-  "onnx-community/DepthPro-ONNX",
-  { dtype: "q4" },
+  "onnx-community/DepthPro-ONNX", {
+    dtype: "q4"
+  },
 );
 const processor = await AutoProcessor.from_pretrained(
   "onnx-community/DepthPro-ONNX",
@@ -18,7 +19,10 @@ const image = await RawImage.read("./assets/image.jpg");
 const inputs = await processor(image);
 
 // Run depth estimation model
-const { predicted_depth, focallength_px } = await depth(inputs);
+const {
+  predicted_depth,
+  focallength_px
+} = await depth(inputs);
 
 // Normalize the depth map to [0, 1]
 const depth_map_data = predicted_depth.data;

@@ -53,8 +53,9 @@ export class Caption {
 
   static async from_pretrained(model_id) {
     const model = await Florence2ForConditionalGeneration.from_pretrained(
-      model_id,
-      { dtype: "fp32" },
+      model_id, {
+        dtype: "fp32"
+      },
     );
     const processor = await AutoProcessor.from_pretrained(model_id);
     const tokenizer = await AutoTokenizer.from_pretrained(model_id);

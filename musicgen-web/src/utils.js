@@ -37,6 +37,7 @@ export function encodeWAV(samples, sampleRate = 16000) {
 
   return buffer;
 }
+
 function writeString(view, offset, string) {
   for (let i = 0; i < string.length; ++i) {
     view.setUint8(offset + i, string.charCodeAt(i));

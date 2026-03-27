@@ -1,6 +1,8 @@
 // https://nextjs.org/docs/app/building-your-application/routing/route-handlers
 
-import { pipeline } from "@huggingface/transformers";
+import {
+  pipeline
+} from "@huggingface/transformers";
 
 // NOTE: We attach the classifier to the global object to avoid unnecessary reloads during development
 const classifier = (globalThis.classifier ??= await pipeline(
@@ -12,7 +14,11 @@ export async function GET(request) {
   const text = request.nextUrl.searchParams.get("text");
 
   if (!text) {
-    return Response.json({ message: "No text provided" }, { status: 400 });
+    return Response.json({
+      message: "No text provided"
+    }, {
+      status: 400
+    });
   }
 
   const result = await classifier(text);

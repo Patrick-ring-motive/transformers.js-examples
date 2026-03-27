@@ -13,7 +13,10 @@ import {
   pipeline,
 } from "@huggingface/transformers";
 
-import { KokoroTTS, TextSplitterStream } from "kokoro-js";
+import {
+  KokoroTTS,
+  TextSplitterStream
+} from "kokoro-js";
 
 import {
   MAX_BUFFER_DURATION,
@@ -34,7 +37,10 @@ const tts = await KokoroTTS.from_pretrained(model_id, {
 });
 
 const device = "webgpu";
-self.postMessage({ type: "info", message: `Using device: "${device}"` });
+self.postMessage({
+  type: "info",
+  message: `Using device: "${device}"`
+});
 self.postMessage({
   type: "info",
   message: "Loading models...",
@@ -43,13 +49,16 @@ self.postMessage({
 
 // Load models
 const silero_vad = await AutoModel.from_pretrained(
-  "onnx-community/silero-vad",
-  {
-    config: { model_type: "custom" },
+  "onnx-community/silero-vad", {
+    config: {
+      model_type: "custom"
+    },
     dtype: "fp32", // Full-precision
   },
 ).catch((error) => {
-  self.postMessage({ error });
+  self.postMessage({
+    error
+  });
   throw error;
 });
 
@@ -71,7 +80,9 @@ const transcriber = await pipeline(
     dtype: DEVICE_DTYPE_CONFIGS[device],
   },
 ).catch((error) => {
-  self.postMessage({ error });
+  self.postMessage({
+    error
+  });
   throw error;
 });
 
@@ -86,10 +97,12 @@ const llm = await AutoModelForCausalLM.from_pretrained(llm_model_id, {
 
 const SYSTEM_MESSAGE = {
   role: "system",
-  content:
-    "You're a helpful and conversational voice assistant. Keep your responses short, clear, and casual.",
+  content: "You're a helpful and conversational voice assistant. Keep your responses short, clear, and casual.",
 };
-await llm.generate({ ...tokenizer("x"), max_new_tokens: 1 }); // Compile shaders
+await llm.generate({
+  ...tokenizer("x"),
+  max_new_tokens: 1
+}); // Compile shaders
 
 let messages = [SYSTEM_MESSAGE];
 let past_key_values_cache;
@@ -121,7 +134,14 @@ let isPlaying = false; // new flag
 async function vad(buffer) {
   const input = new Tensor("float32", buffer, [1, buffer.length]);
 
-  const { stateN, output } = await silero_vad({ input, sr, state });
+  const {
+    stateN,
+    output
+  } = await silero_vad({
+    input,
+    sr,
+    state
+  });
   state = stateN; // Update state
 
   const isSpeech = output.data[0];
@@ -144,12 +164,17 @@ const speechToSpeech = async (buffer, data) => {
   isPlaying = true;
 
   // 1. Transcribe the audio from the user
-  const text = await transcriber(buffer).then(({ text }) => text.trim());
+  const text = await transcriber(buffer).then(({
+    text
+  }) => text.trim());
   if (["", "[BLANK_AUDIO]"].includes(text)) {
     // If the transcription is empty or a blank audio, we skip the rest of the processing
     return;
   }
-  messages.push({ role: "user", content: text });
+  messages.push({
+    role: "user",
+    content: text
+  });
 
   // Set up text-to-speech streaming
   const splitter = new TextSplitterStream();
@@ -157,8 +182,17 @@ const speechToSpeech = async (buffer, data) => {
     voice,
   });
   (async () => {
-    for await (const { text, phonemes, audio } of stream) {
-      self.postMessage({ type: "output", text, result: audio });
+    for await (const {
+        text,
+        phonemes,
+        audio
+      }
+      of stream) {
+      self.postMessage({
+        type: "output",
+        text,
+        result: audio
+      });
     }
   })();
 
@@ -177,7 +211,10 @@ const speechToSpeech = async (buffer, data) => {
   });
 
   stopping_criteria = new InterruptableStoppingCriteria();
-  const { past_key_values, sequences } = await llm.generate({
+  const {
+    past_key_values,
+    sequences
+  } = await llm.generate({
     ...inputs,
     past_key_values: past_key_values_cache,
 
@@ -193,11 +230,15 @@ const speechToSpeech = async (buffer, data) => {
   splitter.close();
 
   const decoded = tokenizer.batch_decode(
-    sequences.slice(null, [inputs.input_ids.dims[1], null]),
-    { skip_special_tokens: true },
+    sequences.slice(null, [inputs.input_ids.dims[1], null]), {
+      skip_special_tokens: true
+    },
   );
 
-  messages.push({ role: "assistant", content: decoded[0] });
+  messages.push({
+    role: "assistant",
+    content: decoded[0]
+  });
 };
 
 // Track the number of samples after the last speech chunk
@@ -235,7 +276,11 @@ const dispatchForTranscriptionAndResetAudioBuffer = (overflow) => {
     offset += prev.length;
   }
   paddedBuffer.set(buffer, offset);
-  speechToSpeech(paddedBuffer, { start, end, duration });
+  speechToSpeech(paddedBuffer, {
+    start,
+    end,
+    duration
+  });
 
   // Set overflow (if present) and reset the rest of the audio buffer
   if (overflow) {
@@ -246,7 +291,10 @@ const dispatchForTranscriptionAndResetAudioBuffer = (overflow) => {
 
 let prevBuffers = [];
 self.onmessage = async (event) => {
-  const { type, buffer } = event.data;
+  const {
+    type,
+    buffer
+  } = event.data;
 
   // refuse new audio while playing back
   if (type === "audio" && isPlaying) return;
@@ -343,13 +391,26 @@ self.onmessage = async (event) => {
 function greet(text) {
   isPlaying = true;
   const splitter = new TextSplitterStream();
-  const stream = tts.stream(splitter, { voice });
+  const stream = tts.stream(splitter, {
+    voice
+  });
   (async () => {
-    for await (const { text: chunkText, audio } of stream) {
-      self.postMessage({ type: "output", text: chunkText, result: audio });
+    for await (const {
+        text: chunkText,
+        audio
+      }
+      of stream) {
+      self.postMessage({
+        type: "output",
+        text: chunkText,
+        result: audio
+      });
     }
   })();
   splitter.push(text);
   splitter.close();
-  messages.push({ role: "assistant", content: text });
+  messages.push({
+    role: "assistant",
+    content: text
+  });
 }
