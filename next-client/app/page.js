@@ -54,8 +54,8 @@ export default function Home() {
     /code>
     . <
     /li> <
-    li > Save and see your changes instantly. < /li> <
-    /ol>
+    li > Save and see your changes instantly. < /li> < /
+    ol >
 
     <
     div className = "flex gap-4 items-center flex-col sm:flex-row" >
@@ -73,8 +73,8 @@ export default function Home() {
     target = "_blank"
     rel = "noopener noreferrer" >
     Read our docs <
-    /a> <
-    /div> <
+    /a> < /
+    div > <
     Classifier / >
     <
     /main> <
@@ -127,8 +127,8 @@ export default function Home() {
     }
     />
     Go to hf.co→ <
-    /a> <
-    /footer> <
+    /a> < /
+    footer > <
     /div>
   );
 }
