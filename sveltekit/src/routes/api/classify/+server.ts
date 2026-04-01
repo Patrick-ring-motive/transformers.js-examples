@@ -1,9 +1,16 @@
 // https://svelte.dev/tutorial/kit/get-handlers
 
-import { pipeline } from "@huggingface/transformers";
-import { json, error } from "@sveltejs/kit";
+import {
+  pipeline
+} from "@huggingface/transformers";
+import {
+  json,
+  error
+} from "@sveltejs/kit";
 
-import type { TextClassificationPipeline } from "@huggingface/transformers";
+import type {
+  TextClassificationPipeline
+} from "@huggingface/transformers";
 
 // NOTE: We attach the classifier to the global object to avoid unnecessary reloads during development
 declare global {
@@ -15,7 +22,11 @@ const classifier = (globalThis.classifier ??= await pipeline(
   "Xenova/distilbert-base-uncased-finetuned-sst-2-english",
 ));
 
-export async function GET({ url }: { url: URL }) {
+export async function GET({
+  url
+}: {
+  url: URL
+}) {
   const text = url.searchParams.get("text");
 
   if (!text) {
