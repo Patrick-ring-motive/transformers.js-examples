@@ -45,23 +45,21 @@ class ImageGenerationPipeline {
     });
 
     this.model ??= MultiModalityCausalLM.from_pretrained(this.model_id, {
-      dtype: fp16_supported ?
-        {
-          prepare_inputs_embeds: "q4",
-          language_model: "q4f16",
-          lm_head: "fp16",
-          gen_head: "fp16",
-          gen_img_embeds: "fp16",
-          image_decode: "fp32",
-        } :
-        {
-          prepare_inputs_embeds: "fp32",
-          language_model: "q4",
-          lm_head: "fp32",
-          gen_head: "fp32",
-          gen_img_embeds: "fp32",
-          image_decode: "fp32",
-        },
+      dtype: fp16_supported ? {
+        prepare_inputs_embeds: "q4",
+        language_model: "q4f16",
+        lm_head: "fp16",
+        gen_head: "fp16",
+        gen_img_embeds: "fp16",
+        image_decode: "fp32",
+      } : {
+        prepare_inputs_embeds: "fp32",
+        language_model: "q4",
+        lm_head: "fp32",
+        gen_head: "fp32",
+        gen_img_embeds: "fp32",
+        image_decode: "fp32",
+      },
       device: {
         prepare_inputs_embeds: "wasm", // TODO use "webgpu" when bug is fixed
         language_model: "webgpu",
@@ -163,13 +161,11 @@ async function generate(messages) {
     });
   } else {
     const inputs = await processor(
-      message.image ?
-      [{
+      message.image ? [{
         role: "<|User|>",
         content: "<image_placeholder>\n" + message.content,
         images: [message.image],
-      }, ] :
-      [{
+      }, ] : [{
           role: "<|System|>",
           content: "You are a helpful assistant. Answer the user's questions in a concise manner.",
         },
