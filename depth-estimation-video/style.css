@@ -28,7 +28,7 @@ body,
   gap: 1rem;
 }
 
-#controls > div {
+#controls>div {
   text-align: center;
 }
 
@@ -55,6 +55,7 @@ h3 {
   background-position: center;
   background-repeat: no-repeat;
 }
+
 #video,
 #output-canvas {
   width: 504px;
