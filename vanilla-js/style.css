@@ -36,7 +36,7 @@ body {
   position: relative;
 }
 
-#image-container > img {
+#image-container>img {
   width: 100%;
 }
 
