@@ -96,7 +96,7 @@ canvas {
   transform: translate(-50%, -50%);
 }
 
-#controls > button {
+#controls>button {
   padding: 6px 12px;
   background-color: #3498db;
   color: white;
@@ -106,7 +106,7 @@ canvas {
   font-size: 16px;
 }
 
-#controls > button:disabled {
+#controls>button:disabled {
   background-color: #d1d5db;
   color: #6b7280;
   border: 1px solid #9ca3af;
