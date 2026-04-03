@@ -2,25 +2,32 @@
 
 /* Custom scrollbar styles */
 .scrollbar-thin::-webkit-scrollbar {
-  width: 0.5rem; /* Equivalent to w-2 in Tailwind */
+  width: 0.5rem;
+  /* Equivalent to w-2 in Tailwind */
 }
 
 .scrollbar-thin::-webkit-scrollbar-track {
-  border-radius: 9999px; /* Equivalent to rounded-full in Tailwind */
-  background-color: #f3f4f6; /* Equivalent to bg-gray-100 in Tailwind */
+  border-radius: 9999px;
+  /* Equivalent to rounded-full in Tailwind */
+  background-color: #f3f4f6;
+  /* Equivalent to bg-gray-100 in Tailwind */
 }
 
 .scrollbar-thin::-webkit-scrollbar-track.dark {
-  background-color: #374151; /* Equivalent to dark:bg-gray-700 in Tailwind */
+  background-color: #374151;
+  /* Equivalent to dark:bg-gray-700 in Tailwind */
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  border-radius: 9999px; /* Equivalent to rounded-full in Tailwind */
-  background-color: #d1d5db; /* Equivalent to bg-gray-300 in Tailwind */
+  border-radius: 9999px;
+  /* Equivalent to rounded-full in Tailwind */
+  background-color: #d1d5db;
+  /* Equivalent to bg-gray-300 in Tailwind */
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background-color: #6b7280; /* Equivalent to bg-gray-500 in Tailwind */
+  background-color: #6b7280;
+  /* Equivalent to bg-gray-500 in Tailwind */
 }
 
 /* Animation delay classes */
