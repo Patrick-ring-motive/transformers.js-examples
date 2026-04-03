@@ -45,7 +45,6 @@ export default function Classifier() {
     pre className = "border border-gray-300 rounded p-2 dark:bg-black dark:text-white w-full min-h-[120px]" > {
       result ? JSON.stringify(result, null, 2) : "Loading…"
     } <
-    /pre> < /
-    >
+    /pre> < / >
   );
 }
