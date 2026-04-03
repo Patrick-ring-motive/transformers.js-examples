@@ -36,14 +36,13 @@ body {
   margin-top: -10px;
 }
 
-.tooltip > audio {
+.tooltip>audio {
   margin-top: 10px;
   width: 100%;
 }
 
 #search {
-  background: url("https://upload.wikimedia.org/wikipedia/commons/0/0b/Search_Icon.svg")
-    no-repeat center right;
+  background: url("https://upload.wikimedia.org/wikipedia/commons/0/0b/Search_Icon.svg") no-repeat center right;
   background-size: 50px 50px;
   width: 56px;
   border: none;
